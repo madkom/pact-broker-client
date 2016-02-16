@@ -1,4 +1,14 @@
-pacto-mock-server:
-  image: madkom/pact-mock-service:latest
-  ports:
-    - "1234:1234"
+pact_broker:
+  image: "dius/pact_broker:latest"
+  environment:
+    - PACT_BROKER_DATABASE_USERNAME=pact
+    - PACT_BROKER_DATABASE_PASSWORD=pact
+    - PACT_BROKER_DATABASE_HOST=db
+    - PACT_BROKER_DATABASE_NAME=pact
+  links:
+    - "db:db"
+db:
+  image: "postgres:9.5.0"
+  environment:
+    - "POSTGRES_USER=pact"
+    - "POSTGRES_PASSWORD=pact"

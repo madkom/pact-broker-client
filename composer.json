@@ -1,6 +1,6 @@
 {
-    "name": "madkom/pact-php-client",
-    "description": "Client written in PHP for Pact-Mock-Service",
+    "name": "madkom/pact-broker-client",
+    "description": "Client for pact broker.",
     "type": "library",
     "prefer-stable": true,
     "license": "MIT",
@@ -38,6 +38,11 @@
     "autoload": {
         "psr-4": {
             "Madkom\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Madkom\\Stub\\": "tests/stub"
         }
     },
     "config": {

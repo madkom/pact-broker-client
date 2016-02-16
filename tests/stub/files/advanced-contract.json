@@ -1,0 +1,71 @@
+{
+  "consumer": {
+    "name": "consumer_service_c"
+  },
+  "provider": {
+    "name": "provider_service_d"
+  },
+  "interactions": [
+    {
+      "description": "A request for foo",
+      "provider_state": "Foo exists",
+      "request": {
+        "method": "get",
+        "path": "/foo"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "foo": "bar"
+        }
+      }
+    },
+    {
+      "description": "A request for user",
+      "provider_state": "user exists",
+      "request": {
+        "method": "get",
+        "path": "/user",
+        "query": "id=2",
+        "headers": {
+          "Accept": "application/json"
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "foo": [
+            {
+              "name": "Edward",
+              "favColor": "red"
+            }
+          ]
+        },
+        "matchingRules": {
+          "$.body.foo": {
+            "min": 1
+          },
+          "$.body.foo[*].*": {
+            "match": "type"
+          },
+          "$.body.foo[*].name": {
+            "match": "type"
+          },
+          "$.body.foo[*].favColor": {
+            "match": "regex",
+            "regex": "red|green|yellow"
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecificationVersion": "2.0.0"
+  }
+}

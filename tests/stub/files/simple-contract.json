@@ -1,0 +1,30 @@
+{
+  "consumer": {
+    "name": "TestConsumer1"
+  },
+  "provider": {
+    "name": "TestProvider1"
+  },
+  "interactions": [
+    {
+      "description": "A request for foo",
+      "provider_state": "Foo exists",
+      "request": {
+        "method": "get",
+        "path": "/foo"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "foo": "bar"
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecificationVersion": "2.0.0"
+  }
+}

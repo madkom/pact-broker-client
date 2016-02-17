@@ -131,6 +131,17 @@ class HttpBrokerClientSpec extends ObjectBehavior
         $this->retrieveLastAddedPact()->shouldReturn($response);
     }
 
+    function it_should_remove_participant(RequestInterface $request, ResponseInterface $response)
+    {
+        $participantName = 'Service 1';
+
+        $this->requestBuilder->createRemoveParticipantRequest($this->baseUrl, $participantName)->willReturn($request);
+        $this->client->sendRequest($request)->willReturn($response);
+        $response->getStatusCode()->willReturn(200);
+
+        $this->removeParticipant($participantName)->shouldReturn($response);
+    }
+
     function it_should_throw_exception_if_there_was_an_error_while_publishing_pact(RequestInterface $requestInterface, ResponseInterface $response, StreamInterface $stream)
     {
         $consumerName = 'consumerA';
@@ -189,6 +200,19 @@ class HttpBrokerClientSpec extends ObjectBehavior
         $stream->getContents()->willReturn('Error');
 
         $this->shouldThrow(PactBrokerException::class)->during('retrieveLastAddedPact');
+    }
+
+    function it_should_throw_exception_while_removing_participant_if_error_occurred(RequestInterface $request, ResponseInterface $response, StreamInterface $stream)
+    {
+        $participantName = 'Service 1';
+
+        $this->requestBuilder->createRemoveParticipantRequest($this->baseUrl, $participantName)->willReturn($request);
+        $this->client->sendRequest($request)->willReturn($response);
+        $response->getStatusCode()->willReturn(500);
+        $response->getBody()->willReturn($stream);
+        $stream->getContents()->willReturn('Error');
+
+        $this->shouldThrow(PactBrokerException::class)->during('removeParticipant', [$participantName]);
     }
 
 }

@@ -118,6 +118,23 @@ class RequestBuilder
     }
 
     /**
+     * Creates request for removing consumer
+     *
+     * @param $baseUrl
+     * @param $participantName
+     *
+     * @return Request
+     */
+    public function createRemoveParticipantRequest($baseUrl, $participantName)
+    {
+        $url = $baseUrl . '/pacticipants/' . $participantName;
+
+        return new Request('DELETE', $url, [
+            "Content-Type" => "application/json"
+        ]);
+    }
+
+    /**
      * Creates request for retrieving last added pact file
      *
      * @param $baseUrl

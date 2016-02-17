@@ -95,6 +95,22 @@ class RequestBuilderSpec extends ObjectBehavior
         $request->getMethod()->shouldReturn('PUT');
     }
 
+    function it_should_create_request_for_removing_participant()
+    {
+        $url                = 'localhost:80';
+        $participantName       = 'TestConsumer1';
+
+        $request = $this->createRemoveParticipantRequest($url, $participantName);
+
+        $request->shouldHaveType(RequestInterface::class);
+        $request->getHeaders()->shouldReturn([
+            'Host' => ['localhost:80'],
+            'Content-Type' => ['application/json']
+        ]);
+        $request->getRequestTarget()->shouldReturn('/pacticipants/' . $participantName);
+        $request->getMethod()->shouldReturn('DELETE');
+    }
+
     function it_should_create_retrieve_pact_request_for_version()
     {
         $url                = 'localhost:80';

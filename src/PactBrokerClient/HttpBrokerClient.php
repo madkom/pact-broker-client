@@ -124,6 +124,24 @@ class HttpBrokerClient
     }
 
     /**
+     * Removes participant (provider, consumer) from pact-broker
+     *
+     * @param $participantName
+     *
+     * @return ResponseInterface
+     * @throws PactBrokerException
+     */
+    public function removeParticipant($participantName)
+    {
+        $request = $this->requestBuilder->createRemoveParticipantRequest($this->baseUrl, $participantName);
+
+        $response = $this->client->sendRequest($request);
+        $this->checkIfResponseIsCorrect($response);
+
+        return $response;
+    }
+
+    /**
      * Check if response is correct
      *
      * @param ResponseInterface $response

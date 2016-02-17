@@ -33,3 +33,23 @@ $responseProd   = $client->retrievePact('TestProvider2', 'TestConsumer1', 'lates
 $responseLatest = $client->retrievePact('TestProvider2', 'TestConsumer1', 'latest');
 dump(json_decode($responseProd->getBody()->getContents(), true));
 dump(json_decode($responseLatest->getBody()->getContents(), true));
+
+
+echo "\n\n Removing Participant\n\n";
+
+$client->removeParticipant('TestProvider2');
+try {
+    //should throw exception
+    $client->retrievePact('TestProvider2', 'TestConsumer1', 'latest', 'prod');
+    throw new \Exception('should never enter this');
+}catch(\Madkom\PactBrokerClient\PactBrokerException $e) {
+
+}
+
+$client->removeParticipant('TestConsumer1');
+try {
+    $client->retrievePact('TestProvider1', 'TestConsumer1', 'latest', 'prod');
+    throw new \Exception('should never enter this');
+}catch(\Madkom\PactBrokerClient\PactBrokerException $e) {
+
+}

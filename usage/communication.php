@@ -11,7 +11,7 @@ $baseUrl = '172.17.0.3:80';
 
 $client  = new \Http\Adapter\Guzzle6\Client();
 $client = new \Madkom\PactBrokerClient\HttpBrokerClient($baseUrl, $client, new \Madkom\PactBrokerClient\RequestBuilder());
-
+$responseFormatter = new \Madkom\PactBrokerClient\Formatter\ToPactContractFormatter();
 
 // publishing new versions and tagging
 $response = $client->publishPact('TestProvider1', 'TestConsumer1', '1.0.5', $pactSimpleV1);
@@ -21,10 +21,10 @@ $response = $client->publishPact('TestProvider1', 'TestConsumer1', '1.1.0', $pac
 $response = $client->publishPact('TestProvider2', 'TestConsumer1', '1.1.0', $pactAdvancedV2);
 
 echo "\n\nProvider 1 Consumer 1\n\n";
-$responseProd   = $client->retrievePact('TestProvider1', 'TestConsumer1', 'latest', 'prod');
-$responseLatest = $client->retrievePact('TestProvider1', 'TestConsumer1', 'latest');
-dump(json_decode($responseProd->getBody()->getContents(), true));
-dump(json_decode($responseLatest->getBody()->getContents(), true));
+$responseProd   = $client->retrievePact('TestProvider1', 'TestConsumer1', 'latest', 'prod', $responseFormatter);
+$responseLatest = $client->retrievePact('TestProvider1', 'TestConsumer1', 'latest', null, $responseFormatter);
+dump($responseProd);
+dump($responseLatest);
 
 echo "\n\n---------------------------------------------------------------------------\n\n";
 

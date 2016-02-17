@@ -91,36 +91,42 @@ class HttpBrokerClient
     /**
      * Retrieve contract by version or tag name
      *
-     * @param string $providerName
-     * @param string $consumerName
-     * @param string $version Pass 'latest' for last added contract
-     * @param string $tagName Optional. If not not passed retrieving by version
+     * @param string            $providerName
+     * @param string            $consumerName
+     * @param string            $version Pass 'latest' for last added contract
+     * @param string            $tagName Optional. If not not passed retrieving by version
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @param ResponseFormatter $responseFormatter
+     *
+     * @return ResponseInterface
+     * @throws PactBrokerException
      */
-    public function retrievePact($providerName, $consumerName, $version, $tagName = null)
+    public function retrievePact($providerName, $consumerName, $version, $tagName = null, ResponseFormatter $responseFormatter = null)
     {
         $request = $this->requestBuilder->createRetrievePactRequest($this->baseUrl, $consumerName, $providerName, $version, $tagName);
 
         $response = $this->client->sendRequest($request);
         $this->checkIfResponseIsCorrect($response);
 
-        return $response;
+        return $responseFormatter ? $responseFormatter->format($response) : $response;
     }
 
     /**
      * Retrieves last added contract to the broker for all providers.
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @param ResponseFormatter $responseFormatter
+     *
+     * @return ResponseInterface|FormattedResponse
+     * @throws PactBrokerException
      */
-    public function retrieveLastAddedPact()
+    public function retrieveLastAddedPact(ResponseFormatter $responseFormatter = null)
     {
         $request = $this->requestBuilder->createRetrieveLastAddedPact($this->baseUrl);
 
         $response = $this->client->sendRequest($request);
         $this->checkIfResponseIsCorrect($response);
 
-        return $response;
+        return $responseFormatter ? $responseFormatter->format($response) : $response;
     }
 
     /**

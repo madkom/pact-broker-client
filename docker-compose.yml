@@ -12,3 +12,11 @@ db:
   environment:
     - "POSTGRES_USER=pact"
     - "POSTGRES_PASSWORD=pact"
+haproxy:
+  image: "haproxy:1.6.3"
+  volumes:
+    - "./docker/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg"
+  links:
+    - "pact_broker:broker"
+  ports:
+    - "3000:80"

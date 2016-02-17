@@ -66,15 +66,14 @@ class RequestBuilder
      *
      * @param string $baseUrl
      * @param string $consumerName
-     * @param string $providerName
      * @param string $version
      * @param string $tagName
      *
      * @return Request
      */
-    public function createTagVersionRequest($baseUrl, $consumerName, $providerName, $version, $tagName)
+    public function createTagVersionRequest($baseUrl, $consumerName, $version, $tagName)
     {
-        $url = $baseUrl . '/pacts/provider/' . $providerName . '/consumer/' . $consumerName . '/versions/' . $version . '/tags/' . $tagName;
+        $url = $baseUrl . '/pacticipants/' . $consumerName . '/versions/' . $version . '/tags/' . $tagName;
 
         $request = new Request('PUT', $url, [
             "Content-Type" => "application/json"

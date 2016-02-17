@@ -7,11 +7,11 @@
   },
   "interactions": [
     {
-      "description": "A request for foo",
-      "provider_state": "Foo exists",
+      "description": "A request for changed foo",
+      "provider_state": "Foo changed exists",
       "request": {
         "method": "get",
-        "path": "/foo"
+        "path": "/foochanged"
       },
       "response": {
         "status": 200,
@@ -24,11 +24,11 @@
       }
     },
     {
-      "description": "A request for user",
-      "provider_state": "user exists",
+      "description": "A request for changed user",
+      "provider_state": "user changed exists",
       "request": {
         "method": "get",
-        "path": "/user",
+        "path": "/userchanged",
         "query": "id=2",
         "headers": {
           "Accept": "application/json"
@@ -42,7 +42,7 @@
         "body": {
           "foo": [
             {
-              "name": "Edward",
+              "name": "Edward changed",
               "favColor": "red"
             }
           ]

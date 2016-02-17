@@ -84,16 +84,15 @@ class HttpBrokerClientSpec extends ObjectBehavior
 
     function it_should_tag_version(RequestInterface $requestInterface, ResponseInterface $response)
     {
-        $providerName = 'providerB';
         $consumerName = 'consumerA';
         $version      = '1.0.0';
         $tagName      = 'prod';
 
-        $this->requestBuilder->createTagVersionRequest($this->baseUrl, $consumerName, $providerName, $version, $tagName)->willReturn($requestInterface);
+        $this->requestBuilder->createTagVersionRequest($this->baseUrl, $consumerName, $version, $tagName)->willReturn($requestInterface);
         $this->client->sendRequest($requestInterface)->willReturn($response);
         $response->getStatusCode()->willReturn(200);
 
-        $this->tagVersion($providerName, $consumerName, $version, $tagName)->shouldReturn($response);
+        $this->tagVersion($consumerName, $version, $tagName)->shouldReturn($response);
     }
 
     function it_should_retrieve_contract_by_tag(RequestInterface $request, ResponseInterface $response)
@@ -107,7 +106,7 @@ class HttpBrokerClientSpec extends ObjectBehavior
         $this->client->sendRequest($request)->willReturn($response);
         $response->getStatusCode()->willReturn(200);
 
-        $this->retrieveContract($providerName, $consumerName, $version, $tagName)->shouldReturn($response);
+        $this->retrievePact($providerName, $consumerName, $version, $tagName)->shouldReturn($response);
     }
 
     function it_should_retrieve_contract_by_version(RequestInterface $request, ResponseInterface $response)
@@ -120,7 +119,7 @@ class HttpBrokerClientSpec extends ObjectBehavior
         $this->client->sendRequest($request)->willReturn($response);
         $response->getStatusCode()->willReturn(200);
 
-        $this->retrieveContract($providerName, $consumerName, $version)->shouldReturn($response);
+        $this->retrievePact($providerName, $consumerName, $version)->shouldReturn($response);
     }
 
     function it_should_retrieve_last_added_pact_for_all_providers(RequestInterface $requestInterface, ResponseInterface $response)
@@ -129,7 +128,7 @@ class HttpBrokerClientSpec extends ObjectBehavior
         $this->client->sendRequest($requestInterface)->willReturn($response);
         $response->getStatusCode()->willReturn(200);
 
-        $this->retrieveLastAddedContract()->shouldReturn($response);
+        $this->retrieveLastAddedPact()->shouldReturn($response);
     }
 
     function it_should_throw_exception_if_there_was_an_error_while_publishing_pact(RequestInterface $requestInterface, ResponseInterface $response, StreamInterface $stream)
@@ -151,19 +150,18 @@ class HttpBrokerClientSpec extends ObjectBehavior
 
     function it_should_throw_exception_while_tagging_if_error_response(RequestInterface $requestInterface, ResponseInterface $response, StreamInterface $stream)
     {
-        $providerName = 'providerB';
         $consumerName = 'consumerA';
         $version      = '1.0.0';
         $tagName      = 'prod';
 
-        $this->requestBuilder->createTagVersionRequest($this->baseUrl, $consumerName, $providerName, $version, $tagName)->willReturn($requestInterface);
+        $this->requestBuilder->createTagVersionRequest($this->baseUrl, $consumerName, $version, $tagName)->willReturn($requestInterface);
         $this->client->sendRequest($requestInterface)->willReturn($response);
 
         $response->getStatusCode()->willReturn(500);
         $response->getBody()->willReturn($stream);
         $stream->getContents()->willReturn('Error');
 
-        $this->shouldThrow(PactBrokerException::class)->during('tagVersion', [$providerName, $consumerName, $version, $tagName]);
+        $this->shouldThrow(PactBrokerException::class)->during('tagVersion', [$consumerName, $version, $tagName]);
     }
 
     function it_should_throw_exception_while_retrieving_by_tag_if_error_response(RequestInterface $request, ResponseInterface $response, StreamInterface $stream)
@@ -179,7 +177,7 @@ class HttpBrokerClientSpec extends ObjectBehavior
         $response->getBody()->willReturn($stream);
         $stream->getContents()->willReturn('Error');
 
-        $this->shouldThrow(PactBrokerException::class)->during('retrieveContract', [$providerName, $consumerName, $version, $tagName]);
+        $this->shouldThrow(PactBrokerException::class)->during('retrievePact', [$providerName, $consumerName, $version, $tagName]);
     }
 
     function it_should_throw_exception_while_retrieving_last_added_contract(RequestInterface $request, ResponseInterface $response, StreamInterface $stream)
@@ -190,7 +188,7 @@ class HttpBrokerClientSpec extends ObjectBehavior
         $response->getBody()->willReturn($stream);
         $stream->getContents()->willReturn('Error');
 
-        $this->shouldThrow(PactBrokerException::class)->during('retrieveLastAddedContract');
+        $this->shouldThrow(PactBrokerException::class)->during('retrieveLastAddedPact');
     }
 
 }

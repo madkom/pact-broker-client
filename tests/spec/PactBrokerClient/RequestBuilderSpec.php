@@ -81,18 +81,17 @@ class RequestBuilderSpec extends ObjectBehavior
     {
         $url                = 'localhost:80';
         $consumerName       = 'TestConsumer1';
-        $providerName       = 'TestProvider1';
         $version            = '1.0.0';
         $tagName            = 'prod';
 
-        $request = $this->createTagVersionRequest($url, $consumerName, $providerName, $version, $tagName);
+        $request = $this->createTagVersionRequest($url, $consumerName, $version, $tagName);
 
         $request->shouldHaveType(RequestInterface::class);
         $request->getHeaders()->shouldReturn([
             'Host' => ['localhost:80'],
             'Content-Type' => ['application/json']
         ]);
-        $request->getRequestTarget()->shouldReturn('/pacts/provider/' . $providerName . '/consumer/' . $consumerName . '/versions/' . $version . '/tags/' . $tagName);
+        $request->getRequestTarget()->shouldReturn('/pacticipants/' . $consumerName . '/versions/' . $version . '/tags/' . $tagName);
         $request->getMethod()->shouldReturn('PUT');
     }
 

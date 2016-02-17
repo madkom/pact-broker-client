@@ -72,16 +72,15 @@ class HttpBrokerClient
     /**
      * Tags version with specific name
      *
-     * @param string $providerName
      * @param string $consumerName
      * @param string $version
      * @param string $tagName
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function tagVersion($providerName, $consumerName, $version, $tagName)
+    public function tagVersion($consumerName, $version, $tagName)
     {
-        $request = $this->requestBuilder->createTagVersionRequest($this->baseUrl, $consumerName, $providerName, $version, $tagName);
+        $request = $this->requestBuilder->createTagVersionRequest($this->baseUrl, $consumerName, $version, $tagName);
 
         $response = $this->client->sendRequest($request);
         $this->checkIfResponseIsCorrect($response);
@@ -99,7 +98,7 @@ class HttpBrokerClient
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function retrieveContract($providerName, $consumerName, $version, $tagName = null)
+    public function retrievePact($providerName, $consumerName, $version, $tagName = null)
     {
         $request = $this->requestBuilder->createRetrievePactRequest($this->baseUrl, $consumerName, $providerName, $version, $tagName);
 
@@ -114,7 +113,7 @@ class HttpBrokerClient
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function retrieveLastAddedContract()
+    public function retrieveLastAddedPact()
     {
         $request = $this->requestBuilder->createRetrieveLastAddedPact($this->baseUrl);
 
@@ -133,8 +132,8 @@ class HttpBrokerClient
      */
     private function checkIfResponseIsCorrect(ResponseInterface $response)
     {
-        if ($response->getStatusCode() !== 200) {
-            throw new PactBrokerException($response->getBody()->getContents());
+        if (!in_array($response->getStatusCode(), [200, 201, 202, 204])) {
+            throw new PactBrokerException('Response_code: ' . $response->getStatusCode() . ' Response_data:' . $response->getBody()->getContents());
         }
     }
 

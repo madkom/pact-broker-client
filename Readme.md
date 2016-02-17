@@ -1,5 +1,6 @@
 # Pact-Broker-Client
-[![Coverage Status](https://coveralls.io/repos/github/madkom/pact-broker-client/badge.svg?branch=master)](https://coveralls.io/github/madkom/pact-broker-client?branch=master)
+[![Build Status](https://travis-ci.org/madkom/pact-broker-client.svg?branch=master)](https://travis-ci.org/madkom/pact-broker-client)
+[![Coverage Status](https://coveralls.io/repos/github/madkom/pact-broker-client/badge.svg?branch=master)](https://coveralls.io/github/madkom/pact-broker-client?branch=master)  
 
 PHP Client for [Pact Broker](https://github.com/bethesque/pact_broker). 
 

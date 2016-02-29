@@ -36,7 +36,7 @@ class ToPactContractFormatter implements ResponseFormatter
         $formattedResponse['interactions'] = $responseArray['interactions'];
         $formattedResponse['metadata'] = $responseArray['metadata'];
 
-        return json_encode($responseArray);
+        return json_encode($formattedResponse);
     }
 
 }

@@ -1,6 +1,10 @@
 # Pact-Broker-Client
+![PHP 7.0](https://img.shields.io/badge/PHP-7.0-8C9CB6.svg?style=flat)
 [![Build Status](https://travis-ci.org/madkom/pact-broker-client.svg?branch=master)](https://travis-ci.org/madkom/pact-broker-client)
 [![Coverage Status](https://coveralls.io/repos/github/madkom/pact-broker-client/badge.svg?branch=master)](https://coveralls.io/github/madkom/pact-broker-client?branch=master)    
+[![Latest Stable Version](https://poser.pugx.org/madkom/pact-broker-client/v/stable)](https://packagist.org/packages/madkom/pact-broker-client)
+[![Total Downloads](https://poser.pugx.org/madkom/pact-broker-client/downloads)](https://packagist.org/packages/madkom/pact-broker-client)
+[![License](https://poser.pugx.org/madkom/pact-broker-client/license)](https://packagist.org/packages/madkom/pact-broker-client)
 
 PHP Client for [Pact Broker](https://github.com/bethesque/pact_broker). 
 

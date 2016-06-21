@@ -98,7 +98,7 @@ class HttpBrokerClient
      *
      * @param ResponseFormatter $responseFormatter
      *
-     * @return ResponseInterface
+     * @return Contract
      * @throws PactBrokerException
      */
     public function retrievePact($providerName, $consumerName, $version, $tagName = null, ResponseFormatter $responseFormatter = null)
@@ -108,7 +108,10 @@ class HttpBrokerClient
         $response = $this->client->sendRequest($request);
         $this->checkIfResponseIsCorrect($response);
 
-        return $responseFormatter ? $responseFormatter->format($response) : $response;
+        return new Contract(
+            $response->getHeader('X-Pact-Consumer-Version') ? $response->getHeader('X-Pact-Consumer-Version')[0] : '',
+            $responseFormatter ? $responseFormatter->format($response) : $response
+        );
     }
 
     /**
@@ -116,7 +119,7 @@ class HttpBrokerClient
      *
      * @param ResponseFormatter $responseFormatter
      *
-     * @return ResponseInterface|FormattedResponse
+     * @return Contract
      * @throws PactBrokerException
      */
     public function retrieveLastAddedPact(ResponseFormatter $responseFormatter = null)
@@ -126,7 +129,10 @@ class HttpBrokerClient
         $response = $this->client->sendRequest($request);
         $this->checkIfResponseIsCorrect($response);
 
-        return $responseFormatter ? $responseFormatter->format($response) : $response;
+        return new Contract(
+            $response->getHeader('X-Pact-Consumer-Version') ? $response->getHeader('X-Pact-Consumer-Version')[0] : '',
+            $responseFormatter ? $responseFormatter->format($response) : $response
+        );
     }
 
     /**

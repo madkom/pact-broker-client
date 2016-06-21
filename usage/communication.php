@@ -23,16 +23,17 @@ $response = $client->publishPact('TestProvider2', 'TestConsumer1', '1.1.0', $pac
 echo "\n\nProvider 1 Consumer 1\n\n";
 $responseProd   = $client->retrievePact('TestProvider1', 'TestConsumer1', 'latest', 'prod', $responseFormatter);
 $responseLatest = $client->retrievePact('TestProvider1', 'TestConsumer1', 'latest', null, $responseFormatter);
-dump($responseProd);
-dump($responseLatest);
+var_dump($responseProd);
+dump($responseProd->version(), $responseProd);
+dump($responseLatest->version(), $responseLatest);
 
 echo "\n\n---------------------------------------------------------------------------\n\n";
 
 echo "\n\nProvider 2 Consumer 1\n\n";
 $responseProd   = $client->retrievePact('TestProvider2', 'TestConsumer1', 'latest', 'prod');
 $responseLatest = $client->retrievePact('TestProvider2', 'TestConsumer1', 'latest');
-dump(json_decode($responseProd->getBody()->getContents(), true));
-dump(json_decode($responseLatest->getBody()->getContents(), true));
+dump($responseProd->version(), json_decode($responseProd->data()->getBody()->getContents(), true));
+dump($responseLatest->version(), json_decode($responseLatest->data()->getBody()->getContents(), true));
 
 
 echo "\n\n Removing Participant\n\n";

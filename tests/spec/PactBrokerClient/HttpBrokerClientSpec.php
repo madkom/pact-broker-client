@@ -3,6 +3,7 @@
 namespace spec\Madkom\PactBrokerClient;
 
 use Http\Client\HttpClient;
+use Madkom\PactBrokerClient\Contract;
 use Madkom\PactBrokerClient\HttpBrokerClient;
 use Madkom\PactBrokerClient\PactBrokerException;
 use Madkom\PactBrokerClient\RequestBuilder;
@@ -106,8 +107,9 @@ class HttpBrokerClientSpec extends ObjectBehavior
         $this->requestBuilder->createRetrievePactRequest($this->baseUrl, $consumerName, $providerName, $version, $tagName)->willReturn($request);
         $this->client->sendRequest($request)->willReturn($response);
         $response->getStatusCode()->willReturn(200);
+        $response->getHeader('X-Pact-Consumer-Version')->willReturn([]);
 
-        $this->retrievePact($providerName, $consumerName, $version, $tagName)->shouldReturn($response);
+        $this->retrievePact($providerName, $consumerName, $version, $tagName)->data()->shouldReturn($response);
     }
 
     function it_should_retrieve_contract_by_version(RequestInterface $request, ResponseInterface $response)
@@ -119,8 +121,9 @@ class HttpBrokerClientSpec extends ObjectBehavior
         $this->requestBuilder->createRetrievePactRequest($this->baseUrl, $consumerName, $providerName, $version, null)->willReturn($request);
         $this->client->sendRequest($request)->willReturn($response);
         $response->getStatusCode()->willReturn(200);
+        $response->getHeader('X-Pact-Consumer-Version')->willReturn([]);
 
-        $this->retrievePact($providerName, $consumerName, $version)->shouldReturn($response);
+        $this->retrievePact($providerName, $consumerName, $version)->data()->shouldReturn($response);
     }
 
     function it_should_retrieve_last_added_pact_for_all_providers(RequestInterface $request, ResponseInterface $response)
@@ -128,8 +131,9 @@ class HttpBrokerClientSpec extends ObjectBehavior
         $this->requestBuilder->createRetrieveLastAddedPact($this->baseUrl)->willReturn($request);
         $this->client->sendRequest($request)->willReturn($response);
         $response->getStatusCode()->willReturn(200);
+        $response->getHeader('X-Pact-Consumer-Version')->willReturn([]);
 
-        $this->retrieveLastAddedPact()->shouldReturn($response);
+        $this->retrieveLastAddedPact()->data()->shouldReturn($response);
     }
 
     function it_should_remove_participant(RequestInterface $request, ResponseInterface $response)
@@ -221,9 +225,27 @@ class HttpBrokerClientSpec extends ObjectBehavior
         $this->requestBuilder->createRetrieveLastAddedPact($this->baseUrl)->willReturn($request);
         $this->client->sendRequest($request)->willReturn($response);
         $response->getStatusCode()->willReturn(200);
+        $response->getHeader('X-Pact-Consumer-Version')->willReturn(['1.2.1']);
 
         $responseFormatter->format($response)->willReturn('some');
-        $this->retrieveLastAddedPact($responseFormatter)->shouldReturn('some');
+        $contract = $this->retrieveLastAddedPact($responseFormatter);
+        $contract->shouldHaveType(Contract::class);
+        $contract->data()->shouldReturn('some');
+        $contract->version()->shouldReturn('1.2.1');
+    }
+
+    function it_should_return_empty_string_if_no_version_passed(RequestInterface $request, ResponseInterface $response, ResponseFormatter $responseFormatter)
+    {
+        $this->requestBuilder->createRetrieveLastAddedPact($this->baseUrl)->willReturn($request);
+        $this->client->sendRequest($request)->willReturn($response);
+        $response->getStatusCode()->willReturn(200);
+        $response->getHeader('X-Pact-Consumer-Version')->willReturn([]);
+
+        $responseFormatter->format($response)->willReturn('some');
+        $contract = $this->retrieveLastAddedPact($responseFormatter);
+        $contract->shouldHaveType(Contract::class);
+        $contract->data()->shouldReturn('some');
+        $contract->version()->shouldReturn('');
     }
 
     function it_should_format_response_for_pact_retrieve(RequestInterface $request, ResponseInterface $response, ResponseFormatter $responseFormatter)
@@ -236,9 +258,13 @@ class HttpBrokerClientSpec extends ObjectBehavior
         $this->requestBuilder->createRetrievePactRequest($this->baseUrl, $consumerName, $providerName, $version, $tagName)->willReturn($request);
         $this->client->sendRequest($request)->willReturn($response);
         $response->getStatusCode()->willReturn(200);
+        $response->getHeader('X-Pact-Consumer-Version')->willReturn(['1.2.0']);
 
         $responseFormatter->format($response)->willReturn('a');
-        $this->retrievePact($providerName, $consumerName, $version, $tagName, $responseFormatter, $responseFormatter)->shouldReturn('a');
+        $contract = $this->retrievePact($providerName, $consumerName, $version, $tagName, $responseFormatter, $responseFormatter);
+        $contract->shouldHaveType(Contract::class);
+        $contract->data()->shouldReturn('a');
+        $contract->version()->shouldReturn('1.2.0');
     }
     
 }
